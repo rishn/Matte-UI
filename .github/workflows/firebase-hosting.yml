@@ -16,7 +16,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          # Firebase CLI v15+ requires Node >=20; use Node 20 for compatibility
+          node-version: '20'
+
+      - name: Check Node.js & npm versions
+        run: |
+          node --version
+          npm --version
 
       - name: Install dependencies
         # Use npm install when package-lock.json is not present in the repo.
