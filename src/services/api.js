@@ -1,6 +1,8 @@
 import axios from 'axios'
 
-const API_BASE_URL = '/api'
+// Use the configured Vite env API URL when available (production),
+// otherwise fall back to the relative `/api` path used in dev proxy.
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
 
 // Convert image file to base64
 export const fileToBase64 = (file) => {
