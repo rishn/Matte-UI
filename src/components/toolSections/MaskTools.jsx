@@ -624,7 +624,20 @@ export async function autoRemoveBackground() {
     } catch (e) {
       sourceForAuto = store.baseImage || store.originalImageBase64 || currentImage
     }
-    const result = await autoSegmentBase64(sourceForAuto)
+    let result = null
+    try {
+      result = await autoSegmentBase64(sourceForAuto)
+    } catch (err) {
+      console.error('Auto remove failed:', err)
+      // If upstream returned 502 (gateway) or network error, show friendly message
+      const status = err?.response?.status
+      if (status === 502) {
+        store.showToast('Auto background service may be down or busy. Try again later with a smaller file.')
+      } else {
+        store.showToast('Auto remove failed. Please try again later.')
+      }
+      return
+    }
     if (result && result.result) {
       // If there are manual removal masks, reapply them onto the auto-removed result
       let combined = result.result

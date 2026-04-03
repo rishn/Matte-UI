@@ -40,6 +40,7 @@ jobs:
           VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_FIREBASE_CONTINUE_URL=${{ secrets.VITE_FIREBASE_CONTINUE_URL }}
           VITE_API_URL=${{ secrets.VITE_API_URL }}
+          VITE_USE_SAM=${{ secrets.VITE_USE_SAM }}
           EOF
 
       - name: Build
@@ -55,6 +56,7 @@ jobs:
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_FIREBASE_CONTINUE_URL: ${{ secrets.VITE_FIREBASE_CONTINUE_URL }}
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_USE_SAM: ${{ secrets.VITE_USE_SAM }}
         run: |
           if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
             echo "Missing FIREBASE_SERVICE_ACCOUNT secret. Create a service account key JSON and add it to repo secrets as FIREBASE_SERVICE_ACCOUNT.";
