@@ -629,12 +629,19 @@ export async function autoRemoveBackground() {
       result = await autoSegmentBase64(sourceForAuto)
     } catch (err) {
       console.error('Auto remove failed:', err)
-      // If upstream returned 502 (gateway) or network error, show friendly message
-      const status = err?.response?.status
-      if (status === 502) {
-        store.showToast('Auto background service may be down or busy. Try again later with a smaller file.')
+      // Prefer any friendly message attached to the error (e.g. from api layer)
+      if (err && typeof err.message === 'string' && err.message.length > 0) {
+        store.showToast(err.message)
       } else {
-        store.showToast('Auto remove failed. Please try again later.')
+        // If upstream returned 502, show a specific hint
+        const status = err?.response?.status
+        if (status === 502) {
+          store.showToast('Auto background service may be down or busy. Try again later with a smaller file.')
+        } else if (err && err.code === 'ECONNABORTED') {
+          store.showToast('Auto remove timed out — the service may be busy. Try again later or use a smaller image.')
+        } else {
+          store.showToast('Auto remove failed. Please try again later.')
+        }
       }
       return
     }

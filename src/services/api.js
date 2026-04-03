@@ -20,14 +20,24 @@ export const autoSegment = async (imageFile) => {
   formData.append('file', imageFile)
   // Let the browser set the Content-Type including the boundary for multipart/form-data
   try {
-    const response = await axios.post(`${API_BASE_URL}/segment/auto`, formData)
+    // Add client-side timeout to avoid hanging; 30s chosen as a reasonable upper bound
+    const response = await axios.post(`${API_BASE_URL}/segment/auto`, formData, { timeout: 30000 })
     return response.data
   } catch (err) {
-    // If the origin returned a 502 Bad Gateway (edge or upstream crash), provide a friendly message
-    if (err && err.response && err.response.status === 502) {
-      throw new Error('Auto remove service may be temporarily unavailable. This can happen for large file uploads — please try again later, preferably with a smaller file.')
+    const status = err?.response?.status
+    if (status === 502) {
+      // preserve response so callers can inspect status; augment message for UX
+      err.message = 'Auto remove service may be temporarily unavailable (502). This can happen for large file uploads — please try again later, preferably with a smaller file.'
+      throw err
     }
-    // Re-throw other errors for existing handlers to deal with
+
+    // Axios timeout error code is ECONNABORTED
+    if (err && err.code === 'ECONNABORTED') {
+      const e = new Error('Auto remove request timed out. The service may be busy; try again later or use a smaller image.')
+      e.code = err.code
+      throw e
+    }
+
     throw err
   }
 }
