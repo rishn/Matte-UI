@@ -1,6 +1,9 @@
 import { useStore } from '../../store/useStore'
 import { interactiveSegment } from '../../services/api'
 
+// Respect build-time Vite flag to disable SAM-powered interactive segmentation
+const USE_SAM = ((import.meta.env.VITE_USE_SAM ?? 'true').toString()).toLowerCase() === 'true'
+
 // Use store via getState() so these helpers can be called from Canvas handlers.
 const store = () => useStore.getState()
 
@@ -15,6 +18,10 @@ const store = () => useStore.getState()
 // Returns: resolves after selection set (uses store.setActiveSelection / addToActiveSelections)
 export async function handlePointSelect(e, { canvasImage, currentImage, getImageDisplay, toImageSpace, shiftKey }) {
   if (!canvasImage || !currentImage) return
+  if (!USE_SAM) {
+    try { useStore.getState().showToast('Interactive selection (SAM) is disabled') } catch (err) { }
+    return
+  }
   store().setIsProcessing(true)
   store().showToast('Finding Subject...')
   try {

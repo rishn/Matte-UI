@@ -7,6 +7,9 @@ import useAuth from '../hooks/useAuth'
 import { autoRemoveBackground } from './toolSections/MaskTools'
 import './ToolsPanel.css'
 
+// Build-time flag from Vite to control SAM availability on the frontend
+const USE_SAM = ((import.meta.env.VITE_USE_SAM ?? 'true').toString()).toLowerCase() === 'true'
+
 // Move Image Eraser to top and add Image Restorer below it
 const tools = [
   { id: 'remove-bg', name: 'Remove Background', icon: Sparkles },
@@ -273,13 +276,15 @@ function ToolsPanel() {
         <div className="tools-list">
           {tools.slice(2, 5).map(tool => {
             const Icon = tool.icon
+            const disabledForSam = (tool.id === 'magic-wand') && !USE_SAM
             return (
               <div key={tool.id}>
                 <button
-                  className={`tool-btn ${(activeTool === tool.id || (activeTool === 'image-restorer' && restorerParent === tool.id)) ? 'active' : ''}`}
-                  onClick={() => handleSelectTool(tool.id)}
-                  title={tool.name}
+                  className={`tool-btn ${(activeTool === tool.id || (activeTool === 'image-restorer' && restorerParent === tool.id)) ? 'active' : ''} ${disabledForSam ? 'disabled' : ''}`}
+                  onClick={() => disabledForSam ? showToast('Interactive selection is disabled') : handleSelectTool(tool.id)}
+                  title={disabledForSam ? `${tool.name} (disabled)` : tool.name}
                   data-tooltip={tool.name}
+                  disabled={disabledForSam}
                 >
                   <Icon size={22} />
                 </button>
