@@ -20,7 +20,7 @@
   <img alt="Supabase" src="https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white" />
 </p>
 
-**Matte,** a professional-grade photo editing web application with **AI-powered background removal, segmentation** and comprehensive photo editing features. Built with zero-cost deployment in mind using open-source models. This repository contains the frontend workspace of the application.
+**Matte,** a professional-grade photo editing web application with **AI-powered background removal, segmentation** and comprehensive photo editing features. Built with zero-cost deployment in mind using open-source models. This repository contains the frontend workspace of the application. [Visit the backend workspace.](https://github.com/rishn/Matte-API)
 
 ![Editor](assets/Editor.png)
 
@@ -72,6 +72,20 @@
 
 - Sign Up Page
 ![Sign Up](assets/SignUp.png)
+
+- On Mobile
+   <table>
+      <tr>
+         <td align="center">
+            <img src="assets/MobileEditor.png" alt="Mobile Editor" width="300" />
+            <div style="font-size:0.9em;color:#666;margin-top:6px;">Editor</div>
+         </td>
+         <td align="center">
+            <img src="assets/MobileProjects.png" alt="Mobile Projects" width="300" />
+            <div style="font-size:0.9em;color:#666;margin-top:6px;">Projects</div>
+         </td>
+      </tr>
+   </table>
 
 ## Zero-Cost Setup
 
